@@ -5,21 +5,13 @@ export interface BuildPaths {
     build: string;
     html: string;
     src: string;
-    locales: string;
-    buildLocales: string;
-}
-
-export interface BuildEnv {
-    mode: BuildMode;
-    port: number;
-    apiUrl: string;
 }
 
 export interface BuildOptions {
     mode: BuildMode;
     paths: BuildPaths;
     isDev: boolean;
-    port: number;
+    port: string;
     apiUrl: string;
     project: 'frontend' | 'jest';
 }

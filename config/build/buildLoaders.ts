@@ -1,7 +1,8 @@
 import webpack from 'webpack';
-import { buildCssLoader } from './loaders/buildCssLoader';
 import { BuildOptions } from './types/config';
 import { buildBabelLoader } from './loaders/buildBabelLoader';
+import { buildScssLoader } from './loaders/buildScssLoader';
+import { buildCssLoader } from './loaders/buildCssLoader';
 
 export function buildLoaders(options: BuildOptions): webpack.RuleSetRule[] {
     const { isDev } = options;
@@ -14,7 +15,8 @@ export function buildLoaders(options: BuildOptions): webpack.RuleSetRule[] {
     const codeBabelLoader = buildBabelLoader({ ...options, isTsx: false });
     const tsxCodeBabelLoader = buildBabelLoader({ ...options, isTsx: true });
 
-    const cssLoader = buildCssLoader(isDev);
+    const scssLoader = buildScssLoader(isDev);
+    const cssLoader = buildCssLoader()
 
     // Если не используем тайпскрипт - нужен babel-loader
     // const typescriptLoader = {
@@ -38,6 +40,7 @@ export function buildLoaders(options: BuildOptions): webpack.RuleSetRule[] {
         codeBabelLoader,
         tsxCodeBabelLoader,
         // typescriptLoader,
+        scssLoader,
         cssLoader,
     ];
 }

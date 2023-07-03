@@ -1,9 +1,10 @@
 import webpack from 'webpack';
 import path from 'path';
+import dotEnv from 'dotenv';
 import { buildWebpackConfig } from './config/build/buildWebpackConfig';
-import { BuildEnv, BuildMode, BuildPaths } from './config/build/types/config';
+import { BuildMode, BuildPaths } from './config/build/types/config';
 
-function getApiUrl(mode: BuildMode, apiUrl?: string) {
+function getApiUrl(mode: string, apiUrl?: string) {
     if (apiUrl) {
         return apiUrl;
     }
@@ -14,19 +15,22 @@ function getApiUrl(mode: BuildMode, apiUrl?: string) {
     return 'http://localhost:8000';
 }
 
-export default (env: BuildEnv) => {
+export default ({ mode }: { mode: BuildMode }) => {
+    const envPath = mode === 'production' ? '.env.production' : './.env';
+
+    dotEnv.config({ path: envPath });
+
+    const envFile = process.env;
+
     const paths: BuildPaths = {
         entry: path.resolve(__dirname, 'src', 'index.tsx'),
         build: path.resolve(__dirname, 'build'),
         html: path.resolve(__dirname, 'public', 'index.html'),
         src: path.resolve(__dirname, 'src'),
-        locales: path.resolve(__dirname, 'public', 'locales'),
-        buildLocales: path.resolve(__dirname, 'build', 'locales'),
     };
 
-    const mode = env?.mode || 'development';
-    const PORT = env?.port || 3000;
-    const apiUrl = getApiUrl(mode, env?.apiUrl);
+    const PORT = envFile?.APP_PORT || '3000';
+    const apiUrl = getApiUrl(mode, envFile?.APP_API);
 
     const isDev = mode === 'development';
 
