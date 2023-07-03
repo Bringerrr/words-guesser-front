@@ -8,7 +8,7 @@ interface PageProps {
 export const Page = ({ children }: PageProps) => {
     return (
         <Container maxWidth="xl">
-            <Box padding="24px" display="flex">
+            <Box padding="24px 0" display="flex">
                 {children}
             </Box>
         </Container>

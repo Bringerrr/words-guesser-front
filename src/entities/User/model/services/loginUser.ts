@@ -11,8 +11,11 @@ export const loginUser = createAsyncThunk<AuthResponse, UserLoginForm, ThunkConf
             const response = await extra.api.post<AuthResponse>(`/auth/login`, formData);
 
             return response.data;
-        } catch (e) {
-            return rejectWithValue('error');
+        } catch (e: any) {
+            if (e?.response) {
+                return rejectWithValue(e.response?.data?.error);
+            }
+            return rejectWithValue('Error');
         }
     },
 );

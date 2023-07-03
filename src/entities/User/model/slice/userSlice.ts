@@ -44,10 +44,12 @@ export const userSlice = createSlice({
 
                 state.authData = userData;
                 state.isLoading = false;
-                toast('Log in: success');
+                toast.success('Log in: success');
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.error = action.payload;
+
+                toast.error(action.payload);
             });
     },
 });

@@ -19,6 +19,7 @@ const FormikInput = ({ name, label, readOnly }: FormikInputProps) => {
             value={value || ''}
             onChange={onChange}
             onBlur={onBlur}
+            helperText={touched && (error || '')}
             error={touched && Boolean(error)}
             InputProps={{
                 readOnly,

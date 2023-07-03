@@ -6,9 +6,11 @@ import {
     getRouteForbidden,
     getRouteLogin,
     getRouteMain,
+    getRouteRegister,
 } from '@/shared/const/router';
 import { AppRoutesProps } from '@/shared/types/router';
 import { LoginPage } from '@/pages/LoginPage';
+import { RegisterPage } from '@/pages/RegisterPage';
 
 export const routeConfig: Record<AppRoutes, AppRoutesProps> = {
     [AppRoutes.MAIN]: {
@@ -21,8 +23,8 @@ export const routeConfig: Record<AppRoutes, AppRoutesProps> = {
         element: <LoginPage />,
     },
     [AppRoutes.REGISTER]: {
-        path: getRouteLogin(),
-        element: <LoginPage />,
+        path: getRouteRegister(),
+        element: <RegisterPage />,
     },
 
     [AppRoutes.FORBIDDEN]: {

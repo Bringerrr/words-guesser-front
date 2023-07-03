@@ -5,11 +5,13 @@ import { $api } from '@/shared/api/api';
 import { rtkApi } from '@/shared/api/rtkApi';
 import { StateSchema, ThunkExtraArg } from './StateSchema';
 import { createReducerManager } from './reducerManager';
+import { userRegisterReducer } from '@/features/RegisterForm/model/slice/registerUserSlice';
 
 export function createReduxStore(initialState?: StateSchema, asyncReducers?: ReducersMapObject<StateSchema>) {
     const rootReducers: ReducersMapObject<StateSchema> = {
         ...asyncReducers,
         user: userReducer,
+        registerForm: userRegisterReducer,
         [rtkApi.reducerPath]: rtkApi.reducer,
     };
 

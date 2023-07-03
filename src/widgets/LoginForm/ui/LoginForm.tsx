@@ -22,8 +22,10 @@ export const LoginForm = () => {
     });
 
     const onSubmit = async (values: any) => {
-        await dispatch(loginUser(values));
-        navigate(getRouteMain());
+        const data: any = await dispatch(loginUser(values));
+        if (!data?.error) {
+            navigate(getRouteMain());
+        }
     };
 
     return (
@@ -35,12 +37,24 @@ export const LoginForm = () => {
                 onSubmit={onSubmit}
             >
                 <Form>
-                    <FormikInput name="userName" label="username" />
-                    <FormikInput name="password" label="password" />
+                    <Box
+                        display="flex"
+                        flexDirection="column"
+                        mt="16px"
+                        gap="16px"
+                        maxWidth="400px"
+                    >
+                        <FormikInput name="userName" label="Username" />
+                        <FormikInput name="password" label="Password" />
 
-                    <Button type="submit" color="primary" variant="contained">
-                        Submit
-                    </Button>
+                        <Button
+                            type="submit"
+                            color="primary"
+                            variant="contained"
+                        >
+                            Submit
+                        </Button>
+                    </Box>
                 </Form>
             </Formik>
         </Box>

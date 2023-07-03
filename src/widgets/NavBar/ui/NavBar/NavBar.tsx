@@ -15,9 +15,13 @@ import { useNavigate } from 'react-router-dom';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useAppDispatch } from '@/shared/lib/hooks/useAppDispatch/useAppDispatch';
 import { userActions } from '@/entities/User';
-import { getRouteLogin } from '@/shared/const/router';
+import { getRouteLogin, getRouteMain } from '@/shared/const/router';
+import { AppLink } from '@/shared/ui/AppLink';
 
-const pages = ['Products', 'Pricing', 'Blog'];
+const navLinks = [
+    { label: 'Games', to: getRouteMain() },
+    { label: 'Words', to: getRouteMain() },
+];
 
 export const NavBar = () => {
     const dispatch = useAppDispatch();
@@ -36,6 +40,7 @@ export const NavBar = () => {
         ],
         [dispatch, navigate],
     );
+
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -113,14 +118,9 @@ export const NavBar = () => {
                                 display: { xs: 'block', md: 'none' },
                             }}
                         >
-                            {pages.map((page) => (
-                                <MenuItem
-                                    key={page}
-                                    onClick={handleCloseNavMenu}
-                                >
-                                    <Typography textAlign="center">
-                                        {page}
-                                    </Typography>
+                            {navLinks.map((link) => (
+                                <MenuItem key={link.label}>
+                                    <AppLink to={link.to}>{link.label}</AppLink>
                                 </MenuItem>
                             ))}
                         </Menu>
@@ -150,16 +150,11 @@ export const NavBar = () => {
                         sx={{
                             flexGrow: 1,
                             display: { xs: 'none', md: 'flex' },
+                            gap: '12px',
                         }}
                     >
-                        {pages.map((page) => (
-                            <Button
-                                key={page}
-                                onClick={handleCloseNavMenu}
-                                sx={{ my: 2, color: 'white', display: 'block' }}
-                            >
-                                {page}
-                            </Button>
+                        {navLinks.map((link) => (
+                            <AppLink to={link.to}>{link.label}</AppLink>
                         ))}
                     </Box>
 

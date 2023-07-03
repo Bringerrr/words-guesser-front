@@ -10,6 +10,13 @@ export interface User {
 export interface UserLoginForm {
     userName: string;
     password: string;
+    email: string;
+    displayName: string;
+}
+
+export interface UserRegisterForm {
+    userName: string;
+    password: string;
 }
 
 export interface AuthResponse {

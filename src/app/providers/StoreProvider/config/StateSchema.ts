@@ -3,9 +3,11 @@ import { CombinedState } from 'redux';
 import { AxiosInstance } from 'axios';
 import { UserSchema } from '@/entities/User';
 import { rtkApi } from '@/shared/api/rtkApi';
+import { UserRegisterSchema } from '@/features/RegisterForm/model/types/registerFormTypes';
 
 export interface StateSchema {
     user: UserSchema;
+    registerForm: UserRegisterSchema;
     [rtkApi.reducerPath]: ReturnType<typeof rtkApi.reducer>;
 }
 
