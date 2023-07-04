@@ -4,6 +4,7 @@ import { NotFoundPage } from '@/pages/NotFoundPage';
 import {
     AppRoutes,
     getRouteForbidden,
+    getRouteGames,
     getRouteLogin,
     getRouteMain,
     getRouteRegister,
@@ -11,6 +12,7 @@ import {
 import { AppRoutesProps } from '@/shared/types/router';
 import { LoginPage } from '@/pages/LoginPage';
 import { RegisterPage } from '@/pages/RegisterPage';
+import { GamesPage } from '@/pages/GamesPage';
 
 export const routeConfig: Record<AppRoutes, AppRoutesProps> = {
     [AppRoutes.MAIN]: {
@@ -26,7 +28,10 @@ export const routeConfig: Record<AppRoutes, AppRoutesProps> = {
         path: getRouteRegister(),
         element: <RegisterPage />,
     },
-
+    [AppRoutes.GAMES]: {
+        path: getRouteGames(),
+        element: <GamesPage />,
+    },
     [AppRoutes.FORBIDDEN]: {
         path: getRouteForbidden(),
         element: <ForbiddenPage />,

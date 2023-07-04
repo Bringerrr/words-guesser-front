@@ -4,10 +4,12 @@ import { AxiosInstance } from 'axios';
 import { UserSchema } from '@/entities/User';
 import { rtkApi } from '@/shared/api/rtkApi';
 import { UserRegisterSchema } from '@/features/RegisterForm/model/types/registerFormTypes';
+import { GameSchema } from '@/entities/Game/model/types/GameSchema';
 
 export interface StateSchema {
     user: UserSchema;
     registerForm: UserRegisterSchema;
+    game: GameSchema;
     [rtkApi.reducerPath]: ReturnType<typeof rtkApi.reducer>;
 }
 

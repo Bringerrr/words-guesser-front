@@ -6,12 +6,14 @@ import { rtkApi } from '@/shared/api/rtkApi';
 import { StateSchema, ThunkExtraArg } from './StateSchema';
 import { createReducerManager } from './reducerManager';
 import { userRegisterReducer } from '@/features/RegisterForm/model/slice/registerUserSlice';
+import { GameReducer } from '@/entities/Game/model/slices/GameSlice';
 
 export function createReduxStore(initialState?: StateSchema, asyncReducers?: ReducersMapObject<StateSchema>) {
     const rootReducers: ReducersMapObject<StateSchema> = {
         ...asyncReducers,
         user: userReducer,
         registerForm: userRegisterReducer,
+        game: GameReducer,
         [rtkApi.reducerPath]: rtkApi.reducer,
     };
 
