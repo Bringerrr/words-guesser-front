@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import FormikInput from '@/shared/ui/FormikInput/FormikInput';
 import { useAppDispatch } from '@/shared/lib/hooks/useAppDispatch/useAppDispatch';
 import { loginUser } from '@/entities/User/model/services/loginUser';
-import { getRouteMain } from '@/shared/const/router';
+import { getRouteGames } from '@/shared/const/router';
 
 export const LoginForm = () => {
     const dispatch = useAppDispatch();
@@ -24,7 +24,7 @@ export const LoginForm = () => {
     const onSubmit = async (values: any) => {
         const data: any = await dispatch(loginUser(values));
         if (!data?.error) {
-            navigate(getRouteMain());
+            navigate(getRouteGames());
         }
     };
 

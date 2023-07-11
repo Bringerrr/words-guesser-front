@@ -53,12 +53,23 @@ export const RegisterForm = () => {
                 onSubmit={onSubmit}
             >
                 <Form>
-                    <FormikInput name="userName" label="Username" />
-                    <FormikInput name="displayName" label="Display name" />
-                    <FormikInput name="email" label="Email" />
-                    <FormikInput name="password" label="Password" />
-
-                    <Button type="submit" color="primary" variant="contained">
+                    <Box
+                        display="flex"
+                        flexDirection="column"
+                        gap="8px"
+                        mb="16px"
+                    >
+                        <FormikInput name="userName" label="Username" />
+                        <FormikInput name="displayName" label="Display name" />
+                        <FormikInput name="email" label="Email" />
+                        <FormikInput name="password" label="Password" />
+                    </Box>
+                    <Button
+                        fullWidth
+                        type="submit"
+                        color="primary"
+                        variant="contained"
+                    >
                         Submit
                     </Button>
                 </Form>

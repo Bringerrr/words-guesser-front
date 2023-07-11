@@ -52,12 +52,10 @@ export const userSlice = createSlice({
                 state.error = undefined;
                 state.isAuthLoading = true;
             })
-            .addCase(authUser.fulfilled, (state, action: PayloadAction<AuthResponse>) => {
-                const { token, image } = action.payload;
-                const userData = jwtDecode<User>(token);
-                localStorage.setItem(TOKEN_LOCALSTORAGE_KEY, token);
+            .addCase(authUser.fulfilled, (state, action: PayloadAction<User>) => {
+                const authData = action.payload;
 
-                state.authData = { ...userData, image };
+                state.authData = authData;
                 state.isAuthLoading = false;
             })
             .addCase(authUser.rejected, (state, action) => {

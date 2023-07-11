@@ -44,6 +44,11 @@ export const ChatRoom = ({ id }: ChatProps) => {
     };
 
     const createHubConnection = (gameId: string) => {
+        console.log(
+            'createHubConnection',
+            localStorage.getItem(TOKEN_LOCALSTORAGE_KEY)!,
+        );
+
         hubConnection = new HubConnectionBuilder()
             // eslint-disable-next-line no-template-curly-in-string
             .withUrl(`http://localhost:5000/chat?gameId=${gameId}`, {
@@ -97,7 +102,6 @@ export const ChatRoom = ({ id }: ChatProps) => {
     useEffect(() => {
         return () => {
             console.log('clear messages');
-
             clearMessages();
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
