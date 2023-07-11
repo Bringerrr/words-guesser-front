@@ -3,6 +3,7 @@ import { ForbiddenPage } from '@/pages/ForbiddenPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import {
     AppRoutes,
+    getRouteChatRoom,
     getRouteForbidden,
     getRouteGames,
     getRouteLogin,
@@ -13,6 +14,7 @@ import { AppRoutesProps } from '@/shared/types/router';
 import { LoginPage } from '@/pages/LoginPage';
 import { RegisterPage } from '@/pages/RegisterPage';
 import { GamesPage } from '@/pages/GamesPage';
+import { ChatPage } from '@/pages/ChatPage';
 
 export const routeConfig: Record<AppRoutes, AppRoutesProps> = {
     [AppRoutes.MAIN]: {
@@ -31,6 +33,10 @@ export const routeConfig: Record<AppRoutes, AppRoutesProps> = {
     [AppRoutes.GAMES]: {
         path: getRouteGames(),
         element: <GamesPage />,
+    },
+    [AppRoutes.CHAT_ROOM]: {
+        path: getRouteChatRoom(':id'),
+        element: <ChatPage />,
     },
     [AppRoutes.FORBIDDEN]: {
         path: getRouteForbidden(),

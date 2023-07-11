@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { TOKEN_LOCALSTORAGE_KEY } from '@/shared/const/localstorage';
 import { UserSchema, User, AuthResponse } from '../types/user';
 import { loginUser } from '../services/loginUser';
+import { authUser } from '../services/authUser';
 
 const initialState: UserSchema = {
     _inited: false,
@@ -50,7 +51,28 @@ export const userSlice = createSlice({
                 state.error = action.payload;
 
                 toast.error(action.payload);
+            })
+            .addCase(authUser.pending, (state) => {
+                state.error = undefined;
+                state.isLoading = true;
+            })
+            .addCase(authUser.fulfilled, (state, action: PayloadAction<AuthResponse>) => {
+                const { token } = action.payload;
+                const userData = jwtDecode<User>(token);
+
+                localStorage.setItem(TOKEN_LOCALSTORAGE_KEY, token);
+
+                state.authData = userData;
+                state.isLoading = false;
+                toast.success('Log in: success');
+            })
+            .addCase(authUser.rejected, (state, action) => {
+                state.error = action.payload;
+
+                toast.error(action.payload);
             });
+
+        loginUser;
     },
 });
 

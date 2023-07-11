@@ -21,6 +21,7 @@ export interface UserRegisterForm {
 
 export interface AuthResponse {
     token: string;
+    image: string;
 }
 
 export interface UserSchema {
