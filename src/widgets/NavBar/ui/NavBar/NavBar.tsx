@@ -11,6 +11,7 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useAppDispatch } from '@/shared/lib/hooks/useAppDispatch/useAppDispatch';
 import { userActions } from '@/entities/User';
@@ -20,6 +21,7 @@ import {
     getRouteMain,
 } from '@/shared/const/router';
 import { AppLink } from '@/shared/ui/AppLink';
+import { getUserImage } from '@/entities/User/model/selectors/userSelectors';
 
 const navLinks = [
     { label: 'Games', to: getRouteGames() },
@@ -29,6 +31,10 @@ const navLinks = [
 export const NavBar = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+
+    const userImage = useSelector(getUserImage);
+
+    console.log('userImage', userImage);
 
     const settings = useMemo(
         () => [
@@ -157,7 +163,9 @@ export const NavBar = () => {
                         }}
                     >
                         {navLinks.map((link) => (
-                            <AppLink to={link.to}>{link.label}</AppLink>
+                            <AppLink key={link.label} to={link.to}>
+                                {link.label}
+                            </AppLink>
                         ))}
                     </Box>
 
@@ -167,10 +175,7 @@ export const NavBar = () => {
                                 onClick={handleOpenUserMenu}
                                 sx={{ p: 0 }}
                             >
-                                <Avatar
-                                    alt="Remy Sharp"
-                                    src="/static/images/avatar/2.jpg"
-                                />
+                                <Avatar alt="Remy Sharp" src={userImage} />
                             </IconButton>
                         </Tooltip>
                         <Menu

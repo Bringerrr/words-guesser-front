@@ -20,11 +20,6 @@ export const userSlice = createSlice({
             state.authData = action.payload;
         },
         initAuthData: (state) => {
-            const token = localStorage.getItem(TOKEN_LOCALSTORAGE_KEY);
-            if (token) {
-                const userData = jwtDecode<User>(token);
-                state.authData = userData;
-            }
             state._inited = true;
         },
         logout: (state) => {
@@ -55,21 +50,18 @@ export const userSlice = createSlice({
             })
             .addCase(authUser.pending, (state) => {
                 state.error = undefined;
-                state.isLoading = true;
+                state.isAuthLoading = true;
             })
             .addCase(authUser.fulfilled, (state, action: PayloadAction<AuthResponse>) => {
-                const { token } = action.payload;
+                const { token, image } = action.payload;
                 const userData = jwtDecode<User>(token);
-
                 localStorage.setItem(TOKEN_LOCALSTORAGE_KEY, token);
 
-                state.authData = userData;
-                state.isLoading = false;
-                toast.success('Log in: success');
+                state.authData = { ...userData, image };
+                state.isAuthLoading = false;
             })
             .addCase(authUser.rejected, (state, action) => {
                 state.error = action.payload;
-
                 toast.error(action.payload);
             });
     },

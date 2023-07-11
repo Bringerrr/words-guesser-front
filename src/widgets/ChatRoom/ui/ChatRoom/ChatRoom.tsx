@@ -124,9 +124,10 @@ export const ChatRoom = ({ id }: ChatProps) => {
     };
 
     return (
-        <Box>
+        <Box width="100%">
             <Box
-                maxWidth="450px"
+                // maxWidth="450px"
+
                 bgcolor="white"
                 height="350px"
                 borderRadius="6px"
@@ -144,8 +145,6 @@ export const ChatRoom = ({ id }: ChatProps) => {
                                     <img width="100%" src={msg.image} alt="" />
                                 </Box>
                                 <Typography>{msg.content}</Typography>
-                                <Typography>{msg.createdAt}</Typography>
-                                {/* <Typography>{msg.id}</Typography> */}
                             </Box>
                         </ListItem>
                     ))}
@@ -154,6 +153,7 @@ export const ChatRoom = ({ id }: ChatProps) => {
 
             <Box display="flex" gap="18px">
                 <TextField
+                    fullWidth
                     label="Type a message"
                     variant="outlined"
                     value={message}

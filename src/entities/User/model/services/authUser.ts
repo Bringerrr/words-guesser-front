@@ -1,21 +1,18 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkConfig } from '@/app/providers/StoreProvider';
-import { AuthResponse, UserLoginForm } from '../types/user';
+import { AuthResponse } from '../types/user';
 
-export const authUser = createAsyncThunk<AuthResponse, UserLoginForm, ThunkConfig<string>>(
-    'user/auth',
-    async (_, thunkApi) => {
-        const { extra, rejectWithValue } = thunkApi;
+export const authUser = createAsyncThunk<AuthResponse, void, ThunkConfig<string>>('user/auth', async (_, thunkApi) => {
+    const { extra, rejectWithValue } = thunkApi;
 
-        try {
-            const response = await extra.api.get<AuthResponse>(`/auth`);
+    try {
+        const response = await extra.api.get<AuthResponse>(`/auth`);
 
-            return response.data;
-        } catch (e: any) {
-            if (e?.response) {
-                return rejectWithValue(e.response?.data?.error);
-            }
-            return rejectWithValue('Error');
+        return response.data;
+    } catch (e: any) {
+        if (e?.response) {
+            return rejectWithValue(e.response?.data?.error);
         }
-    },
-);
+        return rejectWithValue('Error');
+    }
+});

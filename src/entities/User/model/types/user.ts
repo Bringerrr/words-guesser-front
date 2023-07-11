@@ -5,6 +5,7 @@ export interface User {
     id: string;
     email: string;
     role?: UserRole;
+    image: string;
 }
 
 export interface UserLoginForm {
