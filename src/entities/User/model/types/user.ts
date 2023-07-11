@@ -28,5 +28,6 @@ export interface UserSchema {
     authData?: User;
     error?: any;
     isLoading: boolean;
+    isAuthLoading: boolean;
     _inited: boolean;
 }

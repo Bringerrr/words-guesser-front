@@ -4,11 +4,11 @@ import { AuthResponse, UserLoginForm } from '../types/user';
 
 export const authUser = createAsyncThunk<AuthResponse, UserLoginForm, ThunkConfig<string>>(
     'user/auth',
-    async (formData, thunkApi) => {
+    async (_, thunkApi) => {
         const { extra, rejectWithValue } = thunkApi;
 
         try {
-            const response = await extra.api.post<AuthResponse>(`/auth`, formData);
+            const response = await extra.api.get<AuthResponse>(`/auth`);
 
             return response.data;
         } catch (e: any) {

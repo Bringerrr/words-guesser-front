@@ -9,6 +9,7 @@ import { authUser } from '../services/authUser';
 const initialState: UserSchema = {
     _inited: false,
     isLoading: false,
+    isAuthLoading: false,
 };
 
 export const userSlice = createSlice({
@@ -71,8 +72,6 @@ export const userSlice = createSlice({
 
                 toast.error(action.payload);
             });
-
-        loginUser;
     },
 });
 
