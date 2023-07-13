@@ -18,6 +18,9 @@ import { GameActions } from '@/entities/Game/model/slices/GameSlice';
 import { joinGame } from '@/entities/Game/model/services/joinGame';
 import { useNavigate } from 'react-router-dom';
 import { getRouteChatRoom } from '@/shared/const/router';
+import { useSelector } from 'react-redux';
+import { currenUesrInSlectedGame } from '@/entities/Game/model/selectors/gameSelectors';
+import { getUserAuthData } from '@/entities/User';
 
 interface GameListProps {
     gamesList: Game[];
@@ -28,6 +31,8 @@ export const GameList = ({ gamesList, activeGameId }: GameListProps) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
+    const curentUser = useSelector(getUserAuthData);
+
     const onSelect = useCallback(
         (game: Game) => () => {
             dispatch(GameActions.selectGame(game));
@@ -36,13 +41,18 @@ export const GameList = ({ gamesList, activeGameId }: GameListProps) => {
     );
 
     const onJoinGame = useCallback(
-        (gameId: string) => async () => {
-            // const response = await dispatch(joinGame(gameId));
-            // console.log('resp', response);
+        (game: Game) => async () => {
+            const currentUserInGame = game.players.some(
+                (player) => player.email === curentUser?.email,
+            );
 
-            navigate(getRouteChatRoom(gameId));
+            if (!currentUserInGame) {
+                await dispatch(joinGame(game.id));
+            }
+
+            navigate(getRouteChatRoom(game.id));
         },
-        [navigate],
+        [curentUser?.email, dispatch, navigate],
     );
 
     return (
@@ -76,7 +86,7 @@ export const GameList = ({ gamesList, activeGameId }: GameListProps) => {
                                     </TableCell>
                                     <TableCell>
                                         <Button
-                                            onClick={onJoinGame(game.id)}
+                                            onClick={onJoinGame(game)}
                                             variant="contained"
                                         >
                                             Join

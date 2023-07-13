@@ -139,19 +139,40 @@ export const ChatRoom = ({ id }: ChatProps) => {
                 sx={{ overflowY: 'scroll' }}
             >
                 <List>
-                    {messages.map((msg) => (
-                        <ListItem key={msg.id} sx={{ padding: '5px 10px' }}>
-                            <Box display="flex" gap="8px">
-                                <Typography color="purple">
-                                    {msg.displayName} :
-                                </Typography>
-                                <Box width="20px" height="20px">
-                                    <img width="100%" src={msg.image} alt="" />
+                    {messages.map((msg) => {
+                        const isSystem = msg?.userName === 'system';
+
+                        return (
+                            <ListItem key={msg.id} sx={{ padding: '5px 10px' }}>
+                                <Box display="flex" gap="8px">
+                                    {!isSystem && (
+                                        <>
+                                            <Typography color="purple">
+                                                {msg.displayName} :
+                                            </Typography>
+                                            <Box width="20px" height="20px">
+                                                <img
+                                                    width="100%"
+                                                    src={msg.image}
+                                                    alt=""
+                                                />
+                                            </Box>
+                                        </>
+                                    )}
+
+                                    <Typography
+                                        fontSize={isSystem ? '14px' : '16px'}
+                                        fontStyle={
+                                            isSystem ? 'italic' : 'normal'
+                                        }
+                                        color={isSystem ? 'grey' : 'black'}
+                                    >
+                                        {msg.content}
+                                    </Typography>
                                 </Box>
-                                <Typography>{msg.content}</Typography>
-                            </Box>
-                        </ListItem>
-                    ))}
+                            </ListItem>
+                        );
+                    })}
                 </List>
             </Box>
 
