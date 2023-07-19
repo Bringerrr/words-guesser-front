@@ -11,6 +11,8 @@ import { useAppDispatch } from '@/shared/lib/hooks/useAppDispatch/useAppDispatch
 import { getGameById } from '@/entities/Game/model/services/getGameById';
 import { getGameRoomPlayersIds } from '@/entities/Game/model/selectors/gameSelectors';
 import { ChatRoomUserList } from '../ChatRoomUserList/ChatRoomUserList';
+import { WordsLists } from '@/features/WordsList';
+import { Word } from '@/entities/Word';
 
 interface ChatProps {
     id?: string;
@@ -31,6 +33,7 @@ export const ChatRoom = ({ id }: ChatProps) => {
     const dispatch = useAppDispatch();
 
     const [message, setMessage] = useState('');
+    const [words, setWords] = useState<Word[]>([]);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const chatRef = useRef<HTMLDivElement>(null);
     const playersIds = useSelector(getGameRoomPlayersIds);
@@ -60,7 +63,9 @@ export const ChatRoom = ({ id }: ChatProps) => {
             setMessages(loadedMessages);
         });
 
-        hubConnection.on('ReceiveWords', (words: any) => {
+        hubConnection.on('ReceiveWords', (resp: { value: Word[] }) => {
+            const words = resp?.value || [];
+            setWords(() => [...words]);
             console.log('ReceiveWords', words);
         });
 
@@ -147,6 +152,10 @@ export const ChatRoom = ({ id }: ChatProps) => {
                 >
                     <ChatRoomUserList />
                 </Box>
+            </Box>
+
+            <Box>
+                <WordsLists words={words} />
             </Box>
             <Box display="flex" gap="18px">
                 <TextField
