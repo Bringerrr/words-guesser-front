@@ -12,8 +12,6 @@ export const ChatPage = memo((props: ChatPageProps) => {
 
     const params = useParams();
 
-    console.log('params', params);
-
     return (
         <Page>
             <ChatRoom id={params?.id} />

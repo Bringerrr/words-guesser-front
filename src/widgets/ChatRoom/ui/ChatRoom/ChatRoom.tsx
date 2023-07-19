@@ -1,19 +1,16 @@
 //
 
-import React, { useEffect, useState } from 'react';
-import {
-    TextField,
-    List,
-    ListItem,
-    Button,
-    Box,
-    Typography,
-} from '@mui/material';
-import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
+import React, { useEffect, useRef, useState } from 'react';
+import { TextField, List, Button, Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { getUserDisplayName } from '@/entities/User/model/selectors/userSelectors';
-import { TOKEN_LOCALSTORAGE_KEY } from '@/shared/const/localstorage';
 import { useInitialEffect } from '@/shared/lib/hooks/useInitialEffect/useInitialEffect';
+import { createHubConnectionBuider } from '@/shared/config/createHubConnection';
+import { ChatRoomMessagesListItem } from './ChatRoomMessagesListItem';
+import { useAppDispatch } from '@/shared/lib/hooks/useAppDispatch/useAppDispatch';
+import { getGameById } from '@/entities/Game/model/services/getGameById';
+import { getGameRoomPlayersIds } from '@/entities/Game/model/selectors/gameSelectors';
+import { ChatRoomUserList } from '../ChatRoomUserList/ChatRoomUserList';
 
 interface ChatProps {
     id?: string;
@@ -31,12 +28,24 @@ interface ChatMessage {
 let hubConnection: any = null;
 
 export const ChatRoom = ({ id }: ChatProps) => {
+    const dispatch = useAppDispatch();
+
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState<ChatMessage[]>([]);
+    const chatRef = useRef<HTMLDivElement>(null);
+    const playersIds = useSelector(getGameRoomPlayersIds);
+
+    const scrollDown = () => {
+        setTimeout(() => {
+            const scrollElement = chatRef.current;
+            if (scrollElement) {
+                scrollElement.scrollTop = scrollElement.scrollHeight;
+            }
+        }, 100);
+    };
 
     const onReciveMsg = (message: ChatMessage) => {
-        console.log('messages, message', messages, message);
-
+        scrollDown();
         setMessages((previousState) => {
             return [...previousState, message];
         });
@@ -44,31 +53,15 @@ export const ChatRoom = ({ id }: ChatProps) => {
     };
 
     const createHubConnection = (gameId: string) => {
-        console.log(
-            'createHubConnection',
-            localStorage.getItem(TOKEN_LOCALSTORAGE_KEY)!,
-        );
-
-        hubConnection = new HubConnectionBuilder()
-            // eslint-disable-next-line no-template-curly-in-string
-            .withUrl(`http://localhost:5000/chat?gameId=${gameId}`, {
-                accessTokenFactory: () =>
-                    localStorage.getItem(TOKEN_LOCALSTORAGE_KEY)!,
-            })
-            .withAutomaticReconnect()
-            .configureLogging(LogLevel.Information)
-            .build();
-
-        hubConnection
-            .start()
-            .catch((error: any) =>
-                console.log('Error while connecting', error),
-            );
+        hubConnection = createHubConnectionBuider(gameId);
+        hubConnection.start();
 
         hubConnection.on('LoadMessages', (loadedMessages: any) => {
-            console.log('LoadMessages', loadedMessages);
-
             setMessages(loadedMessages);
+        });
+
+        hubConnection.on('ReceiveWords', (words: any) => {
+            console.log('ReceiveWords', words);
         });
 
         hubConnection.on('ReceiveMessage', (message: ChatMessage) => {
@@ -80,15 +73,8 @@ export const ChatRoom = ({ id }: ChatProps) => {
         hubConnection.stop().catch((error: any) => console.log(error));
     };
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const clearMessages = () => {
-        setMessages([]);
-        stopHubConnection();
-    };
-
     const addMessage = async (values: any) => {
         try {
-            console.log('values', values);
             await hubConnection?.invoke('SendMessage', values);
         } catch (error) {
             console.log('While sending message', error);
@@ -97,15 +83,11 @@ export const ChatRoom = ({ id }: ChatProps) => {
 
     useInitialEffect(() => {
         createHubConnection(id!);
+        // getGame
+        dispatch(getGameById(id!));
     });
 
-    useEffect(() => {
-        return () => {
-            console.log('clear messages');
-            clearMessages();
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    useEffect(() => () => stopHubConnection(), []);
 
     const currentUserName = useSelector(getUserDisplayName);
 
@@ -118,6 +100,7 @@ export const ChatRoom = ({ id }: ChatProps) => {
     const handleSendMessage = async () => {
         if (currentUserName) {
             await addMessage({ content: message, gameId: id });
+            scrollDown();
         }
     };
 
@@ -127,55 +110,44 @@ export const ChatRoom = ({ id }: ChatProps) => {
         }
     };
 
+    const startGame = async () => {
+        await hubConnection.invoke('StartGame', playersIds);
+    };
+
     return (
         <Box width="100%">
-            <Box
-                // maxWidth="450px"
-
-                bgcolor="white"
-                height="350px"
-                borderRadius="6px"
-                mb="24px"
-                sx={{ overflowY: 'scroll' }}
-            >
-                <List>
-                    {messages.map((msg) => {
-                        const isSystem = msg?.userName === 'system';
-
-                        return (
-                            <ListItem key={msg.id} sx={{ padding: '5px 10px' }}>
-                                <Box display="flex" gap="8px">
-                                    {!isSystem && (
-                                        <>
-                                            <Typography color="purple">
-                                                {msg.displayName} :
-                                            </Typography>
-                                            <Box width="20px" height="20px">
-                                                <img
-                                                    width="100%"
-                                                    src={msg.image}
-                                                    alt=""
-                                                />
-                                            </Box>
-                                        </>
-                                    )}
-
-                                    <Typography
-                                        fontSize={isSystem ? '14px' : '16px'}
-                                        fontStyle={
-                                            isSystem ? 'italic' : 'normal'
-                                        }
-                                        color={isSystem ? 'grey' : 'black'}
-                                    >
-                                        {msg.content}
-                                    </Typography>
-                                </Box>
-                            </ListItem>
-                        );
-                    })}
-                </List>
+            <Box display="flex" mb="24px" gap="24px" height="350px">
+                <Box
+                    flex="1"
+                    ref={chatRef}
+                    bgcolor="white"
+                    borderRadius="6px"
+                    height="100%"
+                    sx={{ overflowY: 'scroll' }}
+                >
+                    <List>
+                        {messages.map((msg) => (
+                            <ChatRoomMessagesListItem
+                                id={msg.id}
+                                key={msg.id}
+                                userName={msg.userName}
+                                displayName={msg.displayName}
+                                image={msg.image}
+                                content={msg.content}
+                            />
+                        ))}
+                    </List>
+                </Box>
+                <Box
+                    height="100%"
+                    flexBasis="240px"
+                    bgcolor="white"
+                    borderRadius="6px"
+                    sx={{ overflowY: 'scroll' }}
+                >
+                    <ChatRoomUserList />
+                </Box>
             </Box>
-
             <Box display="flex" gap="18px">
                 <TextField
                     fullWidth
@@ -187,6 +159,13 @@ export const ChatRoom = ({ id }: ChatProps) => {
                 />
                 <Button onClick={handleSendMessage} variant="contained">
                     Send
+                </Button>
+                <Button
+                    color="secondary"
+                    onClick={startGame}
+                    variant="contained"
+                >
+                    Start
                 </Button>
             </Box>
         </Box>
