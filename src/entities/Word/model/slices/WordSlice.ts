@@ -1,17 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { WordSchema } from '../types/WordSchema';
 
-const initialState: WordSchema = {
-    
-};
+const initialState: any = {};
 
 export const WordSlice = createSlice({
     name: 'Word',
     initialState,
     reducers: {
-        template: (state, action: PayloadAction<string>) => {
-           
-        },
+        template: (state, action: PayloadAction<string>) => {},
     },
     // extraReducers: (builder) => {
     //     builder
