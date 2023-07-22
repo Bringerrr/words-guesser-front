@@ -12,14 +12,12 @@ import {
     TableHead,
     TableRow,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { Game } from '@/entities/Game/model/types/GameSchema';
 import { useAppDispatch } from '@/shared/lib/hooks/useAppDispatch/useAppDispatch';
 import { GameActions } from '@/entities/Game/model/slices/GameSlice';
-import { joinGame } from '@/entities/Game/model/services/joinGame';
-import { useNavigate } from 'react-router-dom';
 import { getRouteChatRoom } from '@/shared/const/router';
-import { useSelector } from 'react-redux';
-import { currenUesrInSlectedGame } from '@/entities/Game/model/selectors/gameSelectors';
 import { getUserAuthData } from '@/entities/User';
 
 interface GameListProps {
@@ -31,7 +29,7 @@ export const GameList = ({ gamesList, activeGameId }: GameListProps) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
-    const curentUser = useSelector(getUserAuthData);
+    const currentUser = useSelector(getUserAuthData);
 
     const onSelect = useCallback(
         (game: Game) => () => {
@@ -43,16 +41,12 @@ export const GameList = ({ gamesList, activeGameId }: GameListProps) => {
     const onJoinGame = useCallback(
         (game: Game) => async () => {
             const currentUserInGame = game.players.some(
-                (player) => player.email === curentUser?.email,
+                (player) => player.email === currentUser?.email,
             );
-
-            if (!currentUserInGame) {
-                await dispatch(joinGame(game.id));
-            }
 
             navigate(getRouteChatRoom(game.id));
         },
-        [curentUser?.email, dispatch, navigate],
+        [currentUser?.email, navigate],
     );
 
     return (

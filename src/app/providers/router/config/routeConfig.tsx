@@ -19,7 +19,7 @@ import { ChatPage } from '@/pages/ChatPage';
 export const routeConfig: Record<AppRoutes, AppRoutesProps> = {
     [AppRoutes.MAIN]: {
         path: getRouteMain(),
-        element: <MainPage />,
+        element: <GamesPage />,
         authOnly: true,
     },
     [AppRoutes.LOGIN]: {

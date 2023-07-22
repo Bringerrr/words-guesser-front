@@ -8,7 +8,6 @@ import {
     selectedGame,
 } from '@/entities/Game/model/selectors/gameSelectors';
 import { useAppDispatch } from '@/shared/lib/hooks/useAppDispatch/useAppDispatch';
-import { joinGame } from '@/entities/Game/model/services/joinGame';
 import { getRouteChatRoom } from '@/shared/const/router';
 
 interface SelectedGamePreviewProps {
@@ -23,9 +22,9 @@ export const SelectedGamePreview = ({ game }: SelectedGamePreviewProps) => {
 
     const onJoinGame = useCallback(() => {
         if (currentGame) {
-            dispatch(joinGame(currentGame.id));
+          navigate(getRouteChatRoom(currentGame.id));
         }
-    }, [currentGame, dispatch]);
+    }, [currentGame, navigate]);
 
     const onJoinRoom = useCallback(
         (id?: string) => () => {

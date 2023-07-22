@@ -1,11 +1,12 @@
 //
 
 import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import { TextField, List, Button, Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { getUserDisplayName } from '@/entities/User/model/selectors/userSelectors';
 import { useInitialEffect } from '@/shared/lib/hooks/useInitialEffect/useInitialEffect';
-import { createHubConnectionBuider } from '@/shared/config/createHubConnection';
+import { createChatHubConnectionBuilder } from '@/shared/config/createChatHubConnection';
 import { ChatRoomMessagesListItem } from './ChatRoomMessagesListItem';
 import { useAppDispatch } from '@/shared/lib/hooks/useAppDispatch/useAppDispatch';
 import { getGameById } from '@/entities/Game/model/services/getGameById';
@@ -13,6 +14,7 @@ import { getGameRoomPlayersIds } from '@/entities/Game/model/selectors/gameSelec
 import { ChatRoomUserList } from '../ChatRoomUserList/ChatRoomUserList';
 import { WordsLists } from '@/features/WordsList';
 import { Word } from '@/entities/Word';
+import { getRouteGames} from "@/shared/const/router";
 
 interface ChatProps {
     id?: string;
@@ -31,6 +33,7 @@ let hubConnection: any = null;
 
 export const ChatRoom = ({ id }: ChatProps) => {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     const [message, setMessage] = useState('');
     const [words, setWords] = useState<Word[]>([]);
@@ -47,7 +50,7 @@ export const ChatRoom = ({ id }: ChatProps) => {
         }, 100);
     };
 
-    const onReciveMsg = (message: ChatMessage) => {
+    const onReceiveMsg = (message: ChatMessage) => {
         scrollDown();
         setMessages((previousState) => {
             return [...previousState, message];
@@ -56,7 +59,7 @@ export const ChatRoom = ({ id }: ChatProps) => {
     };
 
     const createHubConnection = (gameId: string) => {
-        hubConnection = createHubConnectionBuider(gameId);
+        hubConnection = createChatHubConnectionBuilder(gameId);
         hubConnection.start();
 
         hubConnection.on('LoadMessages', (loadedMessages: any) => {
@@ -70,7 +73,7 @@ export const ChatRoom = ({ id }: ChatProps) => {
         });
 
         hubConnection.on('ReceiveMessage', (message: ChatMessage) => {
-            onReciveMsg(message);
+            onReceiveMsg(message);
         });
     };
 
@@ -117,6 +120,10 @@ export const ChatRoom = ({ id }: ChatProps) => {
 
     const startGame = async () => {
         await hubConnection.invoke('StartGame', playersIds);
+    };
+
+    const leaveGame =  () => {
+        navigate(getRouteGames())
     };
 
     return (
@@ -175,6 +182,13 @@ export const ChatRoom = ({ id }: ChatProps) => {
                     variant="contained"
                 >
                     Start
+                </Button>
+                <Button
+                  color="error"
+                  onClick={leaveGame}
+                  variant="contained"
+                >
+                    Leave
                 </Button>
             </Box>
         </Box>
