@@ -22,7 +22,7 @@ export const SelectedGamePreview = ({ game }: SelectedGamePreviewProps) => {
 
     const onJoinGame = useCallback(() => {
         if (currentGame) {
-          navigate(getRouteChatRoom(currentGame.id));
+            navigate(getRouteChatRoom(currentGame.id));
         }
     }, [currentGame, navigate]);
 
@@ -40,26 +40,6 @@ export const SelectedGamePreview = ({ game }: SelectedGamePreviewProps) => {
             <Box mb="16px">
                 <Typography>Id: {game.id}</Typography>
                 <Typography>Status: {game.status}</Typography>
-            </Box>
-
-            <Box display="flex" gap="18px">
-                <Button
-                    color="secondary"
-                    variant="contained"
-                    onClick={onJoinGame}
-                >
-                    {currentUserInGame ? 'Leave' : 'Join'}
-                </Button>
-
-                {currentUserInGame && (
-                    <Button
-                        color="success"
-                        variant="contained"
-                        onClick={onJoinRoom(currentGame?.id)}
-                    >
-                        Join Room
-                    </Button>
-                )}
             </Box>
         </Box>
     );

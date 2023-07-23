@@ -18,9 +18,11 @@ export const WordsLists = ({ words, show }: WordsListProps) => {
         return groups;
     };
 
+    const showWordsGrid = show && words && words?.length > 0;
+
     const groupedWords = groupByComplexity();
 
-    return show ? (
+    return showWordsGrid ? (
         <Box display="flex" gap="0px" flexDirection="column">
             <List sx={{ display: 'flex' }}>
                 {groupedWords[0].map((word) => (

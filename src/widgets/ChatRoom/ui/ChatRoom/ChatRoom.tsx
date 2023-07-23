@@ -1,7 +1,5 @@
-//
-
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import { TextField, List, Button, Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { getUserDisplayName } from '@/entities/User/model/selectors/userSelectors';
@@ -14,7 +12,7 @@ import { getGameRoomPlayersIds } from '@/entities/Game/model/selectors/gameSelec
 import { ChatRoomUserList } from '../ChatRoomUserList/ChatRoomUserList';
 import { WordsLists } from '@/features/WordsList';
 import { Word } from '@/entities/Word';
-import { getRouteGames} from "@/shared/const/router";
+import { getRouteGames } from '@/shared/const/router';
 
 interface ChatProps {
     id?: string;
@@ -120,10 +118,11 @@ export const ChatRoom = ({ id }: ChatProps) => {
 
     const startGame = async () => {
         await hubConnection.invoke('StartGame', playersIds);
+        console.log('StartGame ids', playersIds);
     };
 
-    const leaveGame =  () => {
-        navigate(getRouteGames())
+    const leaveGame = () => {
+        navigate(getRouteGames());
     };
 
     return (
@@ -161,8 +160,27 @@ export const ChatRoom = ({ id }: ChatProps) => {
                 </Box>
             </Box>
 
+            <Box display="flex" mb="16px" gap="16px" justifyContent="flex-end">
+                <Button
+                    color="secondary"
+                    onClick={startGame}
+                    variant="contained"
+                    sx={{ minWidth: '130px' }}
+                >
+                    Start
+                </Button>
+                <Button
+                    color="error"
+                    onClick={leaveGame}
+                    variant="contained"
+                    sx={{ minWidth: '130px' }}
+                >
+                    Leave
+                </Button>
+            </Box>
+
             <Box>
-                <WordsLists words={words} />
+                <WordsLists words={words} show />
             </Box>
             <Box display="flex" gap="18px">
                 <TextField
@@ -175,20 +193,6 @@ export const ChatRoom = ({ id }: ChatProps) => {
                 />
                 <Button onClick={handleSendMessage} variant="contained">
                     Send
-                </Button>
-                <Button
-                    color="secondary"
-                    onClick={startGame}
-                    variant="contained"
-                >
-                    Start
-                </Button>
-                <Button
-                  color="error"
-                  onClick={leaveGame}
-                  variant="contained"
-                >
-                    Leave
                 </Button>
             </Box>
         </Box>
