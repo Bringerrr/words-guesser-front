@@ -6,4 +6,4 @@ export const currenUesrInSlectedGame = (state: StateSchema) =>
 export const gameList = (state: StateSchema) => state.game?.dataList;
 
 export const getGameRoomPlayers = (state: StateSchema) => state.game?.currentData?.players || [];
-export const getGameRoomPlayersIds = (state: StateSchema) => state.game?.currentData?.players.map((p) => p.id) || [];
+export const getGameRoomPlayersIds = (state: StateSchema) => state.game?.currentData?.players.map((p) => p.id!) || [];

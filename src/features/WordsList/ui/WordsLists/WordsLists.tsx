@@ -3,9 +3,10 @@ import { WordItem, Word } from '@/entities/Word';
 
 interface WordsListProps {
     words: Word[];
+    show: boolean;
 }
 
-export const WordsLists = ({ words }: WordsListProps) => {
+export const WordsLists = ({ words, show }: WordsListProps) => {
     const groupByComplexity = () => {
         const groups: Word[][] = [[], [], []];
 
@@ -19,7 +20,7 @@ export const WordsLists = ({ words }: WordsListProps) => {
 
     const groupedWords = groupByComplexity();
 
-    return (
+    return show ? (
         <Box display="flex" gap="0px" flexDirection="column">
             <List sx={{ display: 'flex' }}>
                 {groupedWords[0].map((word) => (
@@ -43,5 +44,5 @@ export const WordsLists = ({ words }: WordsListProps) => {
                 ))}
             </List>
         </Box>
-    );
+    ) : null;
 };
